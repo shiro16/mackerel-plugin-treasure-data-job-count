@@ -33,12 +33,12 @@ func (t TreasureDataJobCountPlugin) FetchMetrics() (map[string]interface{}, erro
 		ApiKey: t.ApiKey,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("Faild to fetch uptime metrics: %s", err)
+		return nil, fmt.Errorf("Faild to Treasure Data Connection: %s", err)
 	}
 
 	jobs, err := c.ListJobs()
 	if err != nil {
-		return nil, fmt.Errorf("Faild to fetch uptime metrics: %s", err)
+		return nil, fmt.Errorf("Faild to fetch jobs: %s", err)
 	}
 
 	var count uint32
