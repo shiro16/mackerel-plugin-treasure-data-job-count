@@ -15,9 +15,9 @@ type TreasureDataJobCountPlugin struct {
 	Status string
 }
 
-func (t TreasureDataJobCountPlugin) GraphDefinition() map[string](mp.Graphs) {
+func (t TreasureDataJobCountPlugin) GraphDefinition() map[string]mp.Graphs {
 	labelPrefix := strings.Title(t.Prefix)
-	return map[string](mp.Graphs){
+	return map[string]mp.Graphs{
 		t.Prefix: mp.Graphs{
 			Label: labelPrefix,
 			Unit:  "integer",
@@ -41,7 +41,7 @@ func (t TreasureDataJobCountPlugin) FetchMetrics() (map[string]interface{}, erro
 		return nil, fmt.Errorf("Faild to fetch uptime metrics: %s", err)
 	}
 
-	count := 0
+	var count uint32
 	for _, job := range jobs.ListJobsResultElements {
 		if job.Status == t.Status {
 			count++
