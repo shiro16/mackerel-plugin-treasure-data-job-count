@@ -12,17 +12,21 @@ import (
 type TreasureDataJobCountPlugin struct {
 	Prefix string
 	ApiKey string
-	Status string
 }
 
 func (t TreasureDataJobCountPlugin) GraphDefinition() map[string]mp.Graphs {
 	labelPrefix := strings.Title(t.Prefix)
+
 	return map[string]mp.Graphs{
 		t.Prefix: mp.Graphs{
 			Label: labelPrefix,
 			Unit:  "integer",
 			Metrics: [](mp.Metrics){
-				mp.Metrics{Name: "seconds", Label: "Seconds"},
+				mp.Metrics{Name: "error", Label: "Error"},
+				mp.Metrics{Name: "killed", Label: "Killed"},
+				mp.Metrics{Name: "queued", Label: "Queued"},
+				mp.Metrics{Name: "running", Label: "Running"},
+				mp.Metrics{Name: "success", Label: "Success"},
 			},
 		},
 	}
@@ -41,19 +45,22 @@ func (t TreasureDataJobCountPlugin) FetchMetrics() (map[string]interface{}, erro
 		return nil, fmt.Errorf("Faild to fetch jobs: %s", err)
 	}
 
-	var count uint32
+	stat := make(map[string]uint32)
 	for _, job := range jobs.ListJobsResultElements {
-		if job.Status == t.Status {
-			count++
-		}
+		stat[job.Status]++
 	}
-	return map[string]interface{}{"seconds": count}, nil
+
+	statRet := make(map[string]interface{})
+	for key, value := range stat {
+		statRet[key] = value
+	}
+
+	return statRet, nil
 }
 
 func main() {
 	optPrefix := flag.String("metric-key-prefix", "treasure-data-job-count", "Metric key prefix")
 	optApiKey := flag.String("treasure-data-api-key", "", "Treasure Data Api Key")
-	optStatus := flag.String("job-status", "running", "Count Job Status")
 	optTempfile := flag.String("tempfile", "", "Temp file name")
 	flag.Parse()
 
@@ -61,7 +68,6 @@ func main() {
 
 	treasureDataJobCount.Prefix = *optPrefix
 	treasureDataJobCount.ApiKey = *optApiKey
-	treasureDataJobCount.Status = *optStatus
 
 	helper := mp.NewMackerelPlugin(treasureDataJobCount)
 	helper.Tempfile = *optTempfile
