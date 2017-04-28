@@ -45,7 +45,7 @@ func (t TreasureDataJobCountPlugin) FetchMetrics() (map[string]interface{}, erro
 		return nil, fmt.Errorf("Faild to fetch jobs: %s", err)
 	}
 
-	stat := make(map[string]uint32)
+	stat := map[string]uint32{"error": 0, "killed": 0, "queued": 0, "running": 0, "success": 0}
 	for _, job := range jobs.ListJobsResultElements {
 		stat[job.Status]++
 	}
