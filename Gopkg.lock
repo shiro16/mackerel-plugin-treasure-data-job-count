@@ -17,7 +17,7 @@
   branch = "master"
   name = "github.com/treasure-data/td-client-go"
   packages = ["."]
-  revision = "eb98003d07997e2335bca3b6ce45740b5de30649"
+  revision = "78c8897f2b646897d28373af444163416a8e805c"
 
 [[projects]]
   name = "github.com/ugorji/go"
