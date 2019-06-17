@@ -12,6 +12,9 @@ import (
 type TreasureDataJobCountPlugin struct {
 	Prefix string
 	ApiKey string
+	From   int
+	To     int
+	Status string
 }
 
 func (t TreasureDataJobCountPlugin) GraphDefinition() map[string]mp.Graphs {
@@ -40,7 +43,17 @@ func (t TreasureDataJobCountPlugin) FetchMetrics() (map[string]interface{}, erro
 		return nil, fmt.Errorf("Faild to Treasure Data Connection: %s", err)
 	}
 
-	jobs, err := c.ListJobs()
+	options := &td_client.ListJobsOptions{}
+	if t.From >= 0 {
+		options.WithFrom(t.From)
+	}
+	if t.To >= 0 {
+		options.WithTo(t.To)
+	}
+	if t.Status != "" {
+		options.WithStatus(t.Status)
+	}
+	jobs, err := c.ListJobsWithOptions(options)
 	if err != nil {
 		return nil, fmt.Errorf("Faild to fetch jobs: %s", err)
 	}
@@ -61,6 +74,9 @@ func (t TreasureDataJobCountPlugin) FetchMetrics() (map[string]interface{}, erro
 func main() {
 	optPrefix := flag.String("metric-key-prefix", "treasure-data-job-count", "Metric key prefix")
 	optApiKey := flag.String("treasure-data-api-key", "", "Treasure Data Api Key")
+	optFrom := flag.Int("from", -1, "Treasure Data job from the nth index in the list")
+	optTo := flag.Int("to", -1, "Treasure Data job up to the nth index in the list")
+	optStatus := flag.String("status", "", "Treasure Data job status")
 	optTempfile := flag.String("tempfile", "", "Temp file name")
 	flag.Parse()
 
@@ -68,6 +84,9 @@ func main() {
 
 	treasureDataJobCount.Prefix = *optPrefix
 	treasureDataJobCount.ApiKey = *optApiKey
+	treasureDataJobCount.From = *optFrom
+	treasureDataJobCount.To = *optTo
+	treasureDataJobCount.Status = *optStatus
 
 	helper := mp.NewMackerelPlugin(treasureDataJobCount)
 	helper.Tempfile = *optTempfile
