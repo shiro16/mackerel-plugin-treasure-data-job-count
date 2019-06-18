@@ -3,31 +3,42 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:dee14e6cc69d74926e0219a4042064dc6e3dff94ad64b1f9de4329cc9d5f38b6"
   name = "github.com/mackerelio/go-mackerel-plugin-helper"
   packages = ["."]
+  pruneopts = "UT"
   revision = "212a27a8642998396b25acaba2fdc1263c4d3e47"
 
 [[projects]]
   branch = "master"
+  digest = "1:7e47cc9dd2ecb99c552800893f68706f979cf2a0d91e6336f9aea17e5369f34c"
   name = "github.com/mackerelio/golib"
   packages = ["pluginutil"]
+  pruneopts = "UT"
   revision = "295ea2626d02a5d78c2ad6c4148a77ab68540b79"
 
 [[projects]]
   branch = "master"
+  digest = "1:53775d58ecb17936895986b8fb6eb4ae018174a3a75387024baaa722802699b0"
   name = "github.com/treasure-data/td-client-go"
   packages = ["."]
-  revision = "78c8897f2b646897d28373af444163416a8e805c"
+  pruneopts = "UT"
+  revision = "172f27e4879c781150428456375ffa70c0262b1a"
 
 [[projects]]
+  digest = "1:397231009a0a63692093d9dd439f382ce4ac499f26bc5a0978e168c596d2400b"
   name = "github.com/ugorji/go"
   packages = ["codec"]
+  pruneopts = "UT"
   revision = "9831f2c3ac1068a78f50999a30db84270f647af6"
   version = "v1.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2ad665711414cd135f9f942bf0628a8ab7a8cfa0e585832394ec60a39c9c0847"
+  input-imports = [
+    "github.com/mackerelio/go-mackerel-plugin-helper",
+    "github.com/treasure-data/td-client-go",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
